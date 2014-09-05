@@ -45,6 +45,7 @@
                         { "range": { "PublishingDetail.PublishingDate.Date._": { "gte": <date>, "lte": <date> } } },
 
                         { "terms": { "DescriptiveDetail.Subject.SubjectCode": <array<integer>> } },
+                        { "terms": { "DescriptiveDetail.Language.LanguageCode": <array<string>> } },
 
                         { "exists" : { "field": "CollateralDetail.CitedContent" } },
                         { "exists" : { "field": "CollateralDetail.SupportingResource" } }
@@ -53,10 +54,22 @@
             }
         }
     },
+    "sort" : [
+        { "PublishingDetail.PublishingDate.Date._": <direction> },
+        { "ProductSupply.SupplyDetail.Price.PriceAmount" : {"order" : <direction>, "mode" : "max"} }
+        { "DescriptiveDetail.TitleDetail.TitleElement.TitleText": <direction> }
+        { }
+        "_score"
+    ],
     "aggs": {
         "subjects": {
             "terms": {
                 "field": "DescriptiveDetail.Subject.SubjectCode"
+            }
+        },
+        "languages": {
+            "terms": {
+                "field": "DescriptiveDetail.Language.LanguageCode"
             }
         }
     }
