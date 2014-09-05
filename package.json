@@ -1,0 +1,15 @@
+{
+  "name": "youbedo-elasticsearch",
+  "version": "0.1.0",
+  "description": "App which updates the youbedo books elasticsearch with the latest mutations",
+
+  "dependencies": {
+    "elasticsearch": "^2.4.1",
+    "log4js": "^0.6.20",
+    "xml2js": "^0.4.4",
+    "underscore": "^1.7.0"
+  },
+
+  "author": "Andres Lamont"
+}
+

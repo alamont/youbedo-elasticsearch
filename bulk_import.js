@@ -1,0 +1,80 @@
+var fs = require('fs');
+elasticsearch = require('elasticsearch');
+var log4js = require('log4js');
+Util = require('util');
+require('./onx.js');
+
+// var serverOptions = {
+//     host: 'youbedo:foldyourbooks@09cef314ab007c8a000.qbox.io:80',
+//     log: 'warning'
+// };
+
+var serverOptions = {
+    host: 'localhost:9200',
+    log: 'warning'
+};
+
+log4js.loadAppender('file');
+log4js.addAppender(log4js.appenders.file('import.log'), 'log');
+var logger = log4js.getLogger('log');
+
+var client = new elasticsearch.Client(serverOptions);
+
+mapping = {
+  "print_book": {
+    "properties" : {
+      "ProductSupply": {
+        "properties": {
+          "SupplyDetail": {
+            "properties": {
+              "Price": {
+                "type" : "nested"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// client.indices.create({index: "books"})
+  // .then(function (body) { client.indices.putMapping({index: "books", type: "print_book", body: mapping}) });
+
+files = fs.readdirSync('onx');
+i = 0;
+
+bulk = function(files,i, callback){
+
+  readOnx("onx/" + files[i], function(data){
+
+    books = data.ONIXMessage.Product;
+    commands = [];
+    books.forEach(function (item) {
+      recordReference = item.RecordReference;
+      commands.push({ index : { _index :"books", _type : "print_book", _id: recordReference } });
+      commands.push(item);
+    })
+
+    client.bulk({body: commands}, function(err,resp){
+      if (err) {
+        console.error('WTF!!!');
+      } else {
+        callback(files[i] + " " + (i + 1) + "/" + files.length);
+        if ((i+1) < files.length){
+          bulk(files,i+1, function(res){
+            console.info(res);
+          });
+        }else{
+          console.info("Done!");
+          // process.exit();
+        }
+      }
+    });
+  });
+
+}
+
+bulk(files,0, function(res){
+  console.info(res);
+});
