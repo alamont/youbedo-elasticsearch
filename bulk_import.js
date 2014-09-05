@@ -21,14 +21,68 @@ var logger = log4js.getLogger('log');
 var client = new elasticsearch.Client(serverOptions);
 
 mapping = {
-  "print_book": {
-    "properties" : {
-      "ProductSupply": {
-        "properties": {
-          "SupplyDetail": {
-            "properties": {
-              "Price": {
-                "type" : "nested"
+  print_book: {
+    properties : {
+      ProductSupply: {
+        properties: {
+          SupplyDetail: {
+            properties: {
+              Price: {
+                type: "nested",
+                properties: {
+                  PriceDate: {
+                    properties: {
+                      Date: {
+                        properties: {
+                          _: {
+                            type: "date",
+                            format: "basic_date"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              SupplyDate: {
+                properties: {
+                  Date: {
+                    properties:{
+                      _: {
+                        type: "date",
+                        format: "basic_date"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      CollateralDetail: {
+        properties: {
+          TextContent: {
+            properties: {
+              Text: {
+                type: "string",
+                analyzer: "dutch"
+              }
+            }
+          }
+        }
+      },
+      PublishingDetail: {
+        properties: {
+          PublishingDate: {
+            properties: {
+              Date: {
+                properties: {
+                  _: {
+                    type: "date",
+                    format: "basic_date"
+                  }
+                }
               }
             }
           }
@@ -38,8 +92,8 @@ mapping = {
   }
 }
 
-// client.indices.create({index: "books"})
-  // .then(function (body) { client.indices.putMapping({index: "books", type: "print_book", body: mapping}) });
+client.indices.create({index: "books"})
+  .then(function (body) { client.indices.putMapping({index: "books", type: "print_book", body: mapping}) });
 
 files = fs.readdirSync('onx');
 i = 0;
