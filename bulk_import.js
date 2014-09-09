@@ -88,6 +88,9 @@ mapping = {
             }
           }
         }
+      },
+      RelatedMaterial: {
+        type: "array"
       }
     }
   }

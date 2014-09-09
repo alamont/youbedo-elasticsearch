@@ -37,16 +37,19 @@ ftp.on('ready', function() {
             var zipEntries = zip.getEntries();
             zipEntries.forEach(function(zipEntry){
               var onx_buffer = zipEntry.getData();
-              updateBooks(onx_buffer.toString('utf-8'), function(res) {
-                if (res){
-                  ftp.rename(file_name, file_name + ".done", function(err){
-                    if (err) throw err;
-                  })
-                  console.log("Processed " + file_name);
-                }else{
-                  console.error("FAILED AT " + file_name);
-                }
-                deferred.resolve();
+              parseOnx(onx_buffer.toString('utf-8'), function(data) {
+                books = data.ONIXMessage.Product;
+                updateBooks(books, function(res) {
+                  if (res){
+                    ftp.rename(file_name, file_name + ".done", function(err){
+                      if (err) throw err;
+                    })
+                    console.log("Processed " + file_name);
+                  }else{
+                    console.error("FAILED AT " + file_name);
+                  }
+                  deferred.resolve();
+                });
               });
             });
 

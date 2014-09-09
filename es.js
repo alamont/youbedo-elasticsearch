@@ -18,25 +18,20 @@ const BLOCKS = ["DescriptiveDetail", "CollateralDetail", "ContentDetail", "Publi
 
 var client = new elasticsearch.Client(serverOptions);
 
-updateBooks = function(onx_string, callback){
-  parseOnx(onx_string, function(data) {
+updateBooks = function(books, callback){
+  commands = [];
+  books.forEach(function (book) {
 
-    books = data.ONIXMessage.Product;
-    commands = [];
-    books.forEach(function (book) {
+    recordReference = book.RecordReference;
 
-      recordReference = book.RecordReference;
+    update_book = _.pick(book, BLOCKS);
 
-      update_book = _.pick(book, BLOCKS);
+    console.log(update_book);
 
-      console.log(update_book);
+    commands.push({ update: {_id: recordReference, _type: "print_book", _index: "books", _retry_on_conflict: 3} })
+    commands.push({doc: update_book});
 
-      commands.push({ update: {_id: recordReference, _type: "print_book", _index: "books", _retry_on_conflict: 3} })
-      commands.push({doc: update_book});
+  })
 
-    })
-
-    callback(true);
-
-  });
+  callback(true);
 }
