@@ -10,7 +10,8 @@
     "underscore": "^1.7.0",
     "ftp": "^0.3.7",
     "adm-zip": "^0.4.4",
-    "q": "^1.0.1"
+    "q": "^1.0.1",
+    "readdirp": "^1.1.0"
   },
 
   "author": "Andres Lamont"
