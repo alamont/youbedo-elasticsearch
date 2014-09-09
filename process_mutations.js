@@ -15,11 +15,15 @@ ftp.on('ready', function() {
     ftp.list("onix30*mut*.zip", function(err, files) {
       if (err) throw err;
 
-      files.forEach(function(file){
+      sorted_files = files.sort()
+      files_names = files.map(function(file){return file.name});
+      sorted_file_names = files_names.sort()
+
+      sorted_file_names.forEach(function(file_name){
 
         var deferred = Q.defer();
 
-        ftp.get(file.name, function(err, stream){
+        ftp.get(file_name, function(err, stream){
           if (err) { deferred.reject(new Error(err)); }
 
           var bufs = [];
@@ -35,9 +39,12 @@ ftp.on('ready', function() {
               var onx_buffer = zipEntry.getData();
               updateBooks(onx_buffer.toString('utf-8'), function(res) {
                 if (res){
-                  console.log("Processed " + file.name);
+                  ftp.rename(file_name, file_name + ".done", function(err){
+                    if (err) throw err;
+                  })
+                  console.log("Processed " + file_name);
                 }else{
-                  console.error("FAILED AT " + file.name);
+                  console.error("FAILED AT " + file_name);
                 }
                 deferred.resolve();
               });

@@ -4,17 +4,17 @@ Util = require('util');
 _ = require('underscore');
 require('./onx.js');
 
-// var serverOptions = {
-//     host: 'youbedo:foldyourbooks@09cef314ab007c8a000.qbox.io:80',
-//     log: 'warning'
-// };
+var serverOptions = {
+    host: 'youbedo:foldyourbooks@09cef314ab007c8a000.qbox.io:80',
+    log: 'warning'
+};
 
 const BLOCKS = ["DescriptiveDetail", "CollateralDetail", "ContentDetail", "PublishingDetail", "RelatedMaterial", "ProductSupply"];
 
-var serverOptions = {
-    host: 'localhost:9200',
-    log: 'trace'
-};
+// var serverOptions = {
+//     host: 'localhost:9200',
+//     log: 'trace'
+// };
 
 var client = new elasticsearch.Client(serverOptions);
 

@@ -5,15 +5,15 @@ Util = require('util');
 require('./onx.js');
 var AdmZip = require('adm-zip');
 
-// var serverOptions = {
-//     host: 'youbedo:foldyourbooks@09cef314ab007c8a000.qbox.io:80',
-//     log: 'warning'
-// };
-
 var serverOptions = {
-    host: 'localhost:9200',
+    host: 'youbedo:foldyourbooks@09cef314ab007c8a000.qbox.io:80',
     log: 'warning'
 };
+
+// var serverOptions = {
+//     host: 'localhost:9200',
+//     log: 'warning'
+// };
 
 log4js.loadAppender('file');
 log4js.addAppender(log4js.appenders.file('import.log'), 'log');
@@ -93,8 +93,8 @@ mapping = {
   }
 }
 
-client.indices.create({index: "books"})
-  .then(function (body) { client.indices.putMapping({index: "books", type: "print_book", body: mapping}) });
+// client.indices.create({index: "books"})
+//   .then(function (body) { client.indices.putMapping({index: "books", type: "print_book", body: mapping}) });
 
 files = fs.readdirSync('/Users/Andres/SkyDrive/Orikami/Youbedo/ONIX');
 files = files.filter(function(f){return f.search(/.zip$/i) >= 0});
@@ -121,7 +121,7 @@ bulk = function(files,i, callback){
 
       client.bulk({body: commands}, function(err,resp){
         if (err) {
-          console.error('WTF!!!');
+          throw err;
         } else {
           callback(files[i] + " " + (i + 1) + "/" + files.length);
           if ((i+1) < files.length){
