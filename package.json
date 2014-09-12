@@ -12,7 +12,8 @@
     "adm-zip": "^0.4.4",
     "q": "^1.0.1",
     "csv-parse": "^0.0.6",
-    "traverse": "^0.6.6"
+    "traverse": "^0.6.6",
+    "synchronize": "^0.9.8"
   },
 
   "author": "Andres Lamont"

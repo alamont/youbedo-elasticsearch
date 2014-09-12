@@ -96,17 +96,17 @@ mapping = {
   }
 }
 
-// client.indices.create({index: "books"})
-//   .then(function (body) { client.indices.putMapping({index: "books", type: "print_book", body: mapping}) });
+client.indices.create({index: "books"})
+  .then(function (body) { client.indices.putMapping({index: "books", type: "print_book", body: mapping}) });
 
-files = fs.readdirSync('/Users/Andres/SkyDrive/Orikami/Youbedo/ONIX');
+files = fs.readdirSync('/Users/Andres/SkyDrive/Orikami/Youbedo/Dump');
 files = files.filter(function(f){return f.search(/.zip$/i) >= 0});
 console.log(files)
 i = 0;
 
 bulk = function(files,i, callback){
 
-  onx_zip = new AdmZip("/Users/Andres/SkyDrive/Orikami/Youbedo/ONIX/" + files[i]);
+  onx_zip = new AdmZip("/Users/Andres/SkyDrive/Orikami/Youbedo/Dump/" + files[i]);
 
   onx_zip.getEntries().forEach(function(onx_xml_file) {
 

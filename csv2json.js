@@ -3,7 +3,7 @@ var fs = require('fs');
 var traverse = require('traverse');
 var util = require('util');
 
-function parseCSV(csv_str, callback){
+parseCSV = function(csv_str, callback){
 
   reverseDate = function(date_str){
     //DDMMYYYY -> YYYYMMDD
@@ -173,9 +173,11 @@ function parseCSV(csv_str, callback){
 
   var parser = parse({delimiter: '\t', columns: true,  quote: ''});
   var books = [];
+  var i = 0;
   parser.on('readable', function(){
     while(record = parser.read()){
       // output.push(record);
+      i = i + 1;
       json = JSON.parse(JSON.stringify(book_base_json));
 
       //First Pass
@@ -224,26 +226,22 @@ function parseCSV(csv_str, callback){
       json.CSVDetail = record;
 
       books.push(json);
+      console.log("Parsed E-Book " + i);
     }
   });
 
   parser.on('error', function(err){
     console.log(err.message);
+    callback("Some Parsing Error", undefined);
   });
 
   parser.on('finish', function(){
     console.log("Finished!");
-    callback(books);
+    callback(false, books);
+    books = null;
   });
 
   parser.write(csv_str);
   parser.end();
 
 }
-
-fs.readFile("/Users/Andres/SkyDrive/Orikami/Youbedo/20140811-eboeken.csv", 'utf8', function(err, data){
-  if (err) throw err;
-  parseCSV(data, function(res){
-    console.log(res);
-  });
-});
